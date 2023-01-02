@@ -3,6 +3,7 @@ import beginWork from './beginWork'
 import completeWork from './completeWork'
 import { createWorkInProgress, FiberNode, FiberRootNode } from './fiber'
 import { HostRoot } from './workTags'
+import { commitMutationEffects } from './commitWork'
 
 // 正在处理的 FiberNode
 let workInProgress: FiberNode | null = null
@@ -70,6 +71,7 @@ function commitRoot(root: FiberRootNode) {
   if (subtreeHasEffects || rootHasEffects) {
     // beforeMutation
     // mutation
+    commitMutationEffects(finishedWork)
 
     // 切换 fiber 树（双缓冲）
     root.current = finishedWork

@@ -1,3 +1,4 @@
+import { NoFlags, MutationMask } from './fiberFlags'
 import beginWork from './beginWork'
 import completeWork from './completeWork'
 import { createWorkInProgress, FiberNode, FiberRootNode } from './fiber'
@@ -52,7 +53,32 @@ function renderRoot(root: FiberRootNode) {
   root.finishedWork = finishedWork
 
   // 依据 wip fiber 树中的 flags 执行具体的 DOM 操作
-  // commitRoot(root)
+  commitRoot(root)
+}
+
+function commitRoot(root: FiberRootNode) {
+  const finishedWork = root.finishedWork
+  if (finishedWork === null) {
+    return
+  }
+  root.finishedWork = null
+
+  __DEV__ && console.log('[commit 开始]', finishedWork)
+  const subtreeHasEffects = (finishedWork.subtreeFlags & MutationMask) !== NoFlags
+  const rootHasEffects = (finishedWork.flags & MutationMask) !== NoFlags
+
+  if (subtreeHasEffects || rootHasEffects) {
+    // beforeMutation
+    // mutation
+
+    // 切换 fiber 树（双缓冲）
+    root.current = finishedWork
+
+    // layout
+  } else {
+    // 切换 fiber 树（双缓冲）
+    root.current = finishedWork
+  }
 }
 
 function workLoop() {

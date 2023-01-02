@@ -48,7 +48,7 @@ function renderRoot(root: FiberRootNode) {
       __DEV__ && console.warn('[workLoop Error]', e)
       workInProgress = null
     }
-  } while (workInProgress !== null)
+  } while (true)
 
   const finishedWork = root.current.alternate
   root.finishedWork = finishedWork

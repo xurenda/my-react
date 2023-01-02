@@ -1,7 +1,7 @@
 import { UpdateQueue } from './updateQueue'
 import { FiberFlags, NoFlags } from './fiberFlags'
 import { Key, Props, ReactElement, Ref } from 'shared/ReactTypes'
-import { FunctionComponent, HostRoot, WorkTag } from './workTags'
+import { FunctionComponent, HostComponent, WorkTag } from './workTags'
 import { Container } from 'hostConfig'
 
 export class FiberNode {
@@ -98,7 +98,7 @@ export function createFiberNodeFromReactElement(element: ReactElement): FiberNod
   if (typeof type === 'function') {
     fiberTag = FunctionComponent
   } else if (typeof type === 'string') {
-    fiberTag = HostRoot
+    fiberTag = HostComponent
   } else {
     __DEV__ && console.warn('[createFiberNodeFromReactElement]', 'unknown element type', element)
   }

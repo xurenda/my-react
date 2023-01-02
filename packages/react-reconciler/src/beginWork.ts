@@ -31,6 +31,7 @@ function updateHostRoot(wip: FiberNode): FiberNode | null {
   const baseState = wip.memoizedState
   const updateQueue = wip.updateQueue as UpdateQueue<ReactElement | null>
   const pending = updateQueue.shared.pending
+  updateQueue.shared.pending = null
   const { memoizedState } = processUpdateQueue(baseState, pending)
   wip.memoizedState = memoizedState
   const nextChildren = wip.memoizedState

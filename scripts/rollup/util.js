@@ -21,6 +21,6 @@ export function getPackageJSON(pkgName) {
   return JSON.parse(data)
 }
 
-export function getDefaultRollupPlugins({ alias = { __DEV__: true }, typescript = {} } = {}) {
+export function getDefaultRollupPlugins({ alias = { __DEV__: true, preventAssignment: true }, typescript = {} } = {}) {
   return [replace(alias), cjs(), ts(typescript)]
 }

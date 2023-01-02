@@ -41,10 +41,12 @@ function commitMutationEffectsOnFiber(finishedWork: FiberNode) {
 function commitPlacement(finishedWork: FiberNode) {
   __DEV__ && console.log('[Placement 操作]', finishedWork)
   const hostParent = getHostParent(finishedWork)
-  appendPlacementNodeIntoContainer(finishedWork, hostParent)
+  if (hostParent) {
+    appendPlacementNodeIntoContainer(finishedWork, hostParent)
+  }
 }
 
-function getHostParent(fiber: FiberNode): Container {
+function getHostParent(fiber: FiberNode): Container | null {
   let parent = fiber.return
 
   while (parent !== null) {

@@ -1,11 +1,14 @@
 {
-  "name": "react-reconciler",
+  "name": "react-dom",
   "version": "1.0.0",
-  "description": "react-reconciler",
+  "description": "react-dom",
   "module": "./src/index.ts",
-  "types": "./src/index.ts",
   "dependencies": {
+    "react-reconciler": "workspace:*",
     "shared": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "workspace:*"
   },
   "keywords": [],
   "author": "",

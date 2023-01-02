@@ -1,5 +1,5 @@
-import { NoFags } from './fiberTags'
-import { appendInitialChild, createInstance, createTextInstance } from 'hostConfig'
+import { NoFlags } from './fiberFlags'
+import { appendInitialChild, Container, createInstance, createTextInstance } from 'hostConfig'
 import { FiberNode } from './fiber'
 import { HostComponent, HostRoot, HostText } from './workTags'
 
@@ -22,6 +22,7 @@ export default function completeWork(wip: FiberNode): null {
         // 1.构建 DOM
         const instance = createInstance(wip.type, newProps)
         // 2.将 DOM 插入到 DOM 树
+        appendAllChildren(instance, wip)
         wip.stateNode = instance
       }
       bubbleProperties(wip)
@@ -32,8 +33,6 @@ export default function completeWork(wip: FiberNode): null {
       } else {
         // 1.构建 DOM
         const instance = createTextInstance(newProps.content)
-        // 2.将 DOM 插入到 DOM 树
-        appendAllChildren(instance, wip)
         wip.stateNode = instance
       }
       bubbleProperties(wip)
@@ -46,7 +45,7 @@ export default function completeWork(wip: FiberNode): null {
   return null
 }
 
-function appendAllChildren(parent: FiberNode, wip: FiberNode) {
+function appendAllChildren(parent: Container, wip: FiberNode) {
   let node = wip.child
 
   while (node !== null) {
@@ -74,7 +73,7 @@ function appendAllChildren(parent: FiberNode, wip: FiberNode) {
 }
 
 function bubbleProperties(wip: FiberNode) {
-  let subtreeFlags = NoFags
+  let subtreeFlags = NoFlags
   let child = wip.child
 
   while (child !== null) {

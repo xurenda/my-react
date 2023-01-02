@@ -48,27 +48,4 @@ export function jsx(type: ElementType, cfg: Record<string, any>, ...maybeChildre
   return createReactElement(type, key, ref, props)
 }
 
-export function jsxDEV(type: ElementType, cfg: Record<string, any>): ReactElement {
-  let key: Key = null
-  let ref: Ref = null
-  const props: Props = {}
-
-  for (const k in cfg) {
-    const v = cfg[k]
-
-    if (k === 'key' && v !== undefined) {
-      key = v
-      continue
-    }
-    if (k === 'ref' && v !== undefined) {
-      ref = v
-      continue
-    }
-
-    if (Object.prototype.hasOwnProperty.call(cfg, k)) {
-      props[k] = v
-    }
-  }
-
-  return createReactElement(type, key, ref, props)
-}
+export const jsxDEV = (type: ElementType, cfg: Record<string, any>) => jsx(type, cfg)

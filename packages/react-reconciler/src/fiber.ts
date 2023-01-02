@@ -1,6 +1,7 @@
+import { UpdateQueue } from './updateQueue'
 import { FiberFlags, NoFlags } from './fiberFlags'
-import { Key, Props, Ref } from 'shared/ReactTypes'
-import { WorkTag } from './workTags'
+import { Key, Props, ReactElement, Ref } from 'shared/ReactTypes'
+import { FunctionComponent, HostRoot, WorkTag } from './workTags'
 import { Container } from 'hostConfig'
 
 export class FiberNode {
@@ -16,7 +17,7 @@ export class FiberNode {
   pendingProps: Props
   memoizedProps: Props | null
   memoizedState: any
-  updateQueue: unknown
+  updateQueue: UpdateQueue<unknown>
   alternate: FiberNode | null
   flags: FiberFlags
 
@@ -25,7 +26,7 @@ export class FiberNode {
     this.tag = tag
     this.key = key
     this.ref = null
-    this.type = null // FunctionComponent: 函数
+    this.type = null // HostComponent: DOM类型string; FunctionComponent: 函数
     this.stateNode = null // HostComponent: DOM节点; HostRoot: FiberRootNode
 
     // 节点关系：构成 Fiber 树
@@ -64,7 +65,6 @@ export function createWorkInProgress(current: FiberNode, pendingProps: Props): F
 
   if (wip === null) {
     // create
-
     wip = new FiberNode(current.tag, pendingProps, current.key)
     wip.stateNode = current.stateNode
 
@@ -72,7 +72,6 @@ export function createWorkInProgress(current: FiberNode, pendingProps: Props): F
     wip.alternate = current
   } else {
     // update
-
     wip.pendingProps = pendingProps
     // 清除副作用
     wip.flags = NoFlags
@@ -84,4 +83,24 @@ export function createWorkInProgress(current: FiberNode, pendingProps: Props): F
   wip.memoizedState = current.memoizedState
 
   return wip
+}
+
+/**
+ * 根据 ReactElement 创建 FiberNode
+ */
+export function createFiberNodeFromReactElement(element: ReactElement): FiberNode {
+  const { type, key, props } = element
+  let fiberTag: WorkTag = FunctionComponent
+
+  if (typeof type === 'function') {
+    fiberTag = FunctionComponent
+  } else if (typeof type === 'string') {
+    fiberTag = HostRoot
+  } else {
+    __DEV__ && console.warn('[createFiberNodeFromReactElement]', 'unknown element type', element)
+  }
+
+  const fiber = new FiberNode(fiberTag, props, key)
+  fiber.type = type
+  return fiber
 }

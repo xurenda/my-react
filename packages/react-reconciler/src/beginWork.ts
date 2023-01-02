@@ -8,6 +8,7 @@ import { mountChildFibers, updateChildFibers } from './childFibers'
  * 递归中的递阶段
  */
 export default function beginWork(wip: FiberNode): FiberNode | null {
+  // 返回子 FiberNode
   switch (wip.tag) {
     case HostRoot:
       return updateHostRoot(wip)

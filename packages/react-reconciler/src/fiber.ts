@@ -17,9 +17,10 @@ export class FiberNode {
   pendingProps: Props
   memoizedProps: Props | null
   memoizedState: any
-  updateQueue: UpdateQueue<unknown>
+  updateQueue: UpdateQueue<unknown> | null
   alternate: FiberNode | null
   flags: FiberFlags
+  subtreeFlags: FiberFlags
 
   constructor(tag: WorkTag, pendingProps: Props, key: Key) {
     // 实例属性
@@ -43,7 +44,8 @@ export class FiberNode {
     this.alternate = null // 双缓冲：current 和 workInProgress 交替
 
     // 副作用
-    this.flags = NoFlags // fiber 将进行的操作
+    this.flags = NoFlags // 将进行的操作
+    this.subtreeFlags = NoFlags // 子树中节点包含的操作
   }
 }
 
@@ -75,6 +77,7 @@ export function createWorkInProgress(current: FiberNode, pendingProps: Props): F
     wip.pendingProps = pendingProps
     // 清除副作用
     wip.flags = NoFlags
+    wip.subtreeFlags = NoFlags
   }
   wip.type = current.type
   wip.updateQueue = current.updateQueue
